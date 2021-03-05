@@ -6,10 +6,12 @@ import java.util.stream.Stream;
 public class StringCalculator {
     private String delimiter;
     private String numbers;
+    private DBLogger dbLogger=null;
 
-    private StringCalculator(String delimiter, String numbers) {
+    public StringCalculator(String delimiter, String numbers,DBLogger dbLogger) {
         this.delimiter = delimiter;
         this.numbers = numbers;
+        this.dbLogger = dbLogger;
     }
 
     private int add() {
@@ -36,17 +38,18 @@ public class StringCalculator {
         }
     }
 
-    public static int add(String numbers) {
+    public int add(String numbers) {
+        dbLogger.log(numbers);
         return parseInput(numbers).add();
     }
 
-    private static StringCalculator parseInput(String input) {
+    private StringCalculator parseInput(String input) {
         if (input.startsWith("//")) {
             String[] headerAndNumberSequence = input.split("\n", 2);
             String delimiter = parseDelimiter(headerAndNumberSequence[0]);
-            return new StringCalculator(delimiter, headerAndNumberSequence[1]);
+            return new StringCalculator(delimiter, headerAndNumberSequence[1],dbLogger);
         } else {
-            return new StringCalculator(",|\n", input);
+            return new StringCalculator(",|\n", input,dbLogger);
         }
     }
 
